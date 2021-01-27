@@ -1,6 +1,6 @@
 {
   "homepage": "http://DariaGapeeva.github.io/todo-week",
-  "name": "todo-list",
+  "name": "todo-week",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
