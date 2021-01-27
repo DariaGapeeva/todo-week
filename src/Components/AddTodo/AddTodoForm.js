@@ -3,13 +3,17 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Input from "../common/form";
 
+const ContainerButton = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 const StyledButton = styled.button`
   border-radius: 5px;
-  background-color: rgba(30, 144, 255);
+  background-color: MediumSlateBlue;
   color: #fff;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 4px;
+  font-size: 1rem;
+  cursor: pointer;
 `;
 
 const AddTodoForm = (props) => {
@@ -41,7 +45,9 @@ const AddTodoForm = (props) => {
         placeholder="Добавь задачу"
         autoFocus={true}
       />
-      <StyledButton>Добавить</StyledButton>
+      <ContainerButton>
+        <StyledButton>+</StyledButton>
+      </ContainerButton>
     </form>
   );
 };

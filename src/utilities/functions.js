@@ -1,14 +1,14 @@
-export const sortedDayOfWeek = (array) => {
-  const week = [
-    "Понедельник",
-    "Вторник",
-    "Среда",
-    "Четверг",
-    "Пятница",
-    "Суббота",
-    "Воскресенье",
-  ];
+export const week = [
+  "Понедельник",
+  "Вторник",
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
+  "Воскресенье",
+];
 
+export const sortedDayOfWeek = (array) => {
   const arrayDayofWeek = week.map((day) => sortedArray(array, day));
 
   let newArray = [

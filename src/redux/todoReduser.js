@@ -10,8 +10,8 @@ const MOVE_TASK_IN_OTHER_COLUMN = "MOVE_TASK_IN_OTHER_COLUMN";
 const SET_TODOS = "SET_TODOS";
 const SHOW_LOADER = "SHOW_LOADER";
 const HIDE_LOADER = "HIDE_LOADER";
-const SHOW_LOADER_BUTTON = "SHOW_LOADER_BUTTON";
-const HIDE_LOADER_BUTTON = "HIDE_LOADER_BUTTON";
+const SHOW_LOADER_DAY = "SHOW_LOADING_DAY";
+const HIDE_LOADER_DAY = "HIDE_LOADING_DAY";
 
 const initialState = {
   todos: [
@@ -87,22 +87,31 @@ const initialState = {
     //       done: false,
     //     },
   ],
+  loadingDay: {
+    isLoading: false,
+    day: "",
+  },
   loading: false,
-  loadingButton: false,
 };
 
 export const todoReduser = (state = initialState, action) => {
   switch (action.type) {
-    case SHOW_LOADER_BUTTON: {
+    case SHOW_LOADER_DAY: {
       return {
         ...state,
-        loadingButton: true,
+        loadingDay: {
+          isLoading: true,
+          day: action.day,
+        },
       };
     }
-    case HIDE_LOADER_BUTTON: {
+    case HIDE_LOADER_DAY: {
       return {
         ...state,
-        loadingButton: false,
+        loadingDay: {
+          isLoading: false,
+          day: action.day,
+        },
       };
     }
 
@@ -122,7 +131,6 @@ export const todoReduser = (state = initialState, action) => {
       const newState = {
         ...state,
         todos: action.todos,
-        loading: false,
       };
 
       return newState;
@@ -212,8 +220,8 @@ export const todoReduser = (state = initialState, action) => {
 
 const showLoader = () => ({ type: SHOW_LOADER });
 const hideLoader = () => ({ type: HIDE_LOADER });
-const showLoaderButton = () => ({ type: SHOW_LOADER_BUTTON });
-const hideLoaderButton = () => ({ type: HIDE_LOADER_BUTTON });
+const showLoaderDay = (day) => ({ type: SHOW_LOADER_DAY, day });
+const hideLoaderDay = (day) => ({ type: HIDE_LOADER_DAY, day });
 
 const setTodosAC = (todos) => ({ type: SET_TODOS, todos });
 
@@ -254,10 +262,11 @@ export const moveTaskInOtherColumnAC = (
 export const addTaskThunk = (task, day, index, done) => {
   return async (dispatch) => {
     try {
-      dispatch(showLoaderButton());
+      dispatch(showLoaderDay(day));
+
       const response = await todoApi.addTodo(task, day, index, done);
 
-      dispatch(hideLoaderButton());
+      dispatch(hideLoaderDay(day));
       dispatch(addTaskAC(task, day, index, done, response.data.name));
     } catch (e) {
       alert(e.message);
@@ -265,7 +274,7 @@ export const addTaskThunk = (task, day, index, done) => {
   };
 };
 
-export const setTodosThunk = (todos) => {
+export const setTodosThunk = () => {
   return async (dispatch) => {
     try {
       dispatch(showLoader());
@@ -278,16 +287,16 @@ export const setTodosThunk = (todos) => {
   };
 };
 
-export const deleteTodoThunk = (id) => {
+export const deleteTodoThunk = (id, day) => {
   return async (dispatch) => {
     try {
-      dispatch(showLoaderButton());
+      dispatch(showLoaderDay(day));
       await todoApi.deleteTodo(id);
       const response = await todoApi.getTodos();
       await Promise.all([
         ...response.map((item, index) => todoApi.reIndex(item.id, index)),
       ]);
-      dispatch(hideLoaderButton());
+      dispatch(hideLoaderDay(day));
       dispatch(deleteTaskAC(id));
     } catch (e) {
       alert(e.message);
@@ -314,7 +323,8 @@ export const moveTaskInSameColumnThunk = (
 ) => {
   return async (dispatch) => {
     try {
-      dispatch(showLoaderButton());
+      dispatch(showLoaderDay(day));
+
       dispatch(
         moveTaskInSameColumnAC(sourceIndex, destinationIndex, draggableId)
       );
@@ -324,9 +334,6 @@ export const moveTaskInSameColumnThunk = (
       const destinationItem = response[destinationIndex];
 
       const newArrayDay = sortedArray(response, day);
-      //   response
-      //     .filter((item) => item.day === day)
-      //     .sort((a, b) => (a.index > b.index ? 1 : -1));
 
       let newSourceIndex = newArrayDay.indexOf(sourceItem);
       let newDestinationIndex = newArrayDay.indexOf(destinationItem);
@@ -347,7 +354,7 @@ export const moveTaskInSameColumnThunk = (
       ]);
       await todoApi.reIndex(draggableId, newDestinationIndex);
 
-      dispatch(hideLoaderButton());
+      dispatch(hideLoaderDay(day));
     } catch (e) {
       alert(e.message);
     }
@@ -363,7 +370,7 @@ export const moveTaskInOtherColumnThunk = (
 ) => {
   return async (dispatch) => {
     try {
-      dispatch(showLoaderButton());
+      dispatch(showLoaderDay(destinationId));
       dispatch(
         moveTaskInOtherColumnAC(
           sourceIndex,
@@ -374,19 +381,13 @@ export const moveTaskInOtherColumnThunk = (
       );
       const response = await todoApi.getTodos();
 
-      console.log(array, "array");
+      console.log(sourceId, "sourceId");
       const sourceItem = response.find((item) => item.id === draggableId);
       const destinationItem = response[destinationIndex];
 
       const arraySource = sortedArray(response, sourceId);
-      //   response
-      //     .filter((item) => item.day === sourceId)
-      //     .sort((a, b) => (a.index > b.index ? 1 : -1));
 
       const arrayDestination = sortedArray(response, destinationId);
-      //   response
-      //     .filter((item) => item.day === destinationId)
-      //     .sort((a, b) => (a.index > b.index ? 1 : -1));
 
       let newSourceIndex = arraySource.indexOf(sourceItem);
       let newDestinationIndex =
@@ -411,9 +412,8 @@ export const moveTaskInOtherColumnThunk = (
         todoApi.moveTodo(draggableId, destinationId),
         todoApi.reIndex(draggableId, newDestinationIndex),
       ]);
-      //   }
 
-      dispatch(hideLoaderButton());
+      dispatch(hideLoaderDay(destinationId));
     } catch (e) {
       alert(e.message);
     }

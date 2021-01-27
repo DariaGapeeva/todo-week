@@ -1,27 +1,12 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import DayTodoContainer from "./DayTodo/DayTodoContainer";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled from "styled-components";
 import Loader from "./../common/Loader";
-
-// const LinkElem = styled(NavLink)`
-//   text-decoration: none;
-//   color: black;
-//   font-weight: 600;
-//   font-size: 1.3rem;
-//   margin-bottom: 15px;
-//   &:hover {
-//     color: rgba(0, 0, 0, 0.7);
-//   }
-//   &.active {
-//     color: rgba(0, 0, 0, 0.7);
-//   }
-// `;
+import { week } from "./../../utilities/functions";
 
 const Content = styled.div`
   display: flex;
-  //   justify-content: space-between;
   flex-wrap: wrap;
 `;
 
@@ -35,8 +20,6 @@ const Navbar = ({ moveTaskInSameColumn, moveTaskInOtherColumn, loading }) => {
 
   const onDragEnd = (result) => {
     const { draggableId, destination, source } = result;
-
-    console.log("result", result);
 
     if (!destination) {
       return;
@@ -72,34 +55,12 @@ const Navbar = ({ moveTaskInSameColumn, moveTaskInOtherColumn, loading }) => {
       {!loading ? (
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <Content>
-            <Item>
-              <h2> Понедельник </h2>
-              <DayTodoContainer day="Понедельник" />
-            </Item>
-            <Item>
-              <h2> Вторник </h2>
-              <DayTodoContainer day="Вторник" />
-            </Item>
-            <Item>
-              <h2> Среда </h2>
-              <DayTodoContainer day="Среда" />
-            </Item>
-            <Item>
-              <h2> Четверг </h2>
-              <DayTodoContainer day="Четверг" />
-            </Item>
-            <Item>
-              <h2> Пятница </h2>
-              <DayTodoContainer day="Пятница" />
-            </Item>
-            <Item>
-              <h2> Суббота </h2>
-              <DayTodoContainer day="Суббота" />
-            </Item>
-            <Item>
-              <h2> Воскресенье </h2>
-              <DayTodoContainer day="Воскресенье" />
-            </Item>
+            {week.map((day) => (
+              <Item>
+                <h3> {day} </h3>
+                <DayTodoContainer day={day} />
+              </Item>
+            ))}
           </Content>
         </DragDropContext>
       ) : (

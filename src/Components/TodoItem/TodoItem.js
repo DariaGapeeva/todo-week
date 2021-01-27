@@ -6,20 +6,12 @@ import Loader from "../common/Loader";
 const Task = styled.span`
   text-decoration: ${(props) => (props.done ? "line-through" : "none")};
 `;
-// const Container = styled.div`
-//   border: 1px solid green;
-//   padding: 3px;
-//   margin-bottom: 8px;
-//   border-radius: 5px;
-//   outline: none;
-//   background-color: ${(props) => (props.isDragging ? "AliceBlue" : "lavender")};
-// `;
 
 const Item = styled.div`
   display: flex;
   font-size: 0.9rem;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   border: 1px solid rgba(188, 143, 143);
   background-color: ${(props) =>
     props.isDragging ? "rgba(255, 250, 250)" : "rgba(255, 250, 250)"};
@@ -33,13 +25,18 @@ const Number = styled.span`
   margin-right: 5px;
 `;
 
-const Input = styled.input`
+const Checkbox = styled.input`
   margin-left: 10px;
   margin-right: 10px;
+  cursor: pointer;
 `;
 
 const Button = styled.button`
   border-radius: 5px;
+
+  font-size: 1rem;
+  color: crimson;
+  font-weight: bold;
   border: none;
   position: absolute;
   top: 0;
@@ -58,17 +55,15 @@ const TodoItem = (props) => {
           isDragging={snapshot.isDragging}
         >
           {props.loadingButton && <Loader />}
-          <Task done={props.todo.done}>
-            <Number> {props.number}</Number>
-            {props.todo.task}
-          </Task>
-          <Input
+          <Number> {props.number}.</Number>
+          <Task done={props.todo.done}>{props.todo.task}</Task>
+          <Checkbox
             type="checkbox"
             checked={props.todo.done}
             onChange={() => props.checked(props.todo.id, !props.todo.done)}
           />
 
-          <Button onClick={() => props.deleteTask(props.todo.id)}>
+          <Button onClick={() => props.deleteTask(props.todo.id, props.day)}>
             &times;
           </Button>
         </Item>
