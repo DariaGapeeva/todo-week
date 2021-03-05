@@ -56,7 +56,7 @@ const Navbar = ({ moveTaskInSameColumn, moveTaskInOtherColumn, loading }) => {
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <Content>
             {week.map((day) => (
-              <Item>
+              <Item key={day}>
                 <h3> {day} </h3>
                 <DayTodoContainer day={day} />
               </Item>

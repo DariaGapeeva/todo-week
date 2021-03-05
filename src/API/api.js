@@ -48,3 +48,18 @@ export const todoApi = {
     });
   },
 };
+
+export const authApi = {
+  signUp(email, password) {
+    return axios.post(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBG3T1hervWJlmu0ZlqIuRmczr9mdn6uFs",
+      { email, password, returnSecureToken: true }
+    );
+  },
+  signIn(email, password) {
+    return axios.post(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBG3T1hervWJlmu0ZlqIuRmczr9mdn6uFs",
+      { email, password, returnSecureToken: true }
+    );
+  },
+};

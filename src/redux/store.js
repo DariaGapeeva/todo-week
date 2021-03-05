@@ -1,9 +1,12 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
+
 import { todoReduser } from "./todoReduser";
+import { authReducer } from "./authReduser";
 
 let redusers = combineReducers({
   todoList: todoReduser,
+  auth: authReducer,
 });
 
 let store = createStore(

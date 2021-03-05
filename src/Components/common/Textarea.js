@@ -4,15 +4,12 @@ import TextareaAutosize from "react-textarea-autosize";
 
 const Box = styled.div`
   position: relative;
-
   width: 100%;
   margin: 10px 0px 10px 0px;
 `;
 
 const FormInput = styled(TextareaAutosize)`
-  border: ${(props) =>
-    !props.required ? "1px solid MediumPurple" : "1px solid red"};
-
+  border: 1px solid MediumPurple;
   border-radius: 5px;
   width: 100%;
   padding: 5px;
@@ -21,12 +18,12 @@ const FormInput = styled(TextareaAutosize)`
   outline: none;
 `;
 
-const Input = ({ label, register, required, ...props }) => {
+const Textarea = ({ label, register, ...props }) => {
   return (
-    <Box required={required}>
-      <FormInput name={label} ref={register({ required })} {...props} />
+    <Box>
+      <FormInput name={label} ref={register} {...props} />
     </Box>
   );
 };
 
-export default Input;
+export default Textarea;

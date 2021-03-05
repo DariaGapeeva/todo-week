@@ -1,30 +1,25 @@
 import React from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import Input from "../common/form";
+import Textarea from "../common/Textarea";
+import Button from "../common/Button";
 
 const ContainerButton = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
-const StyledButton = styled.button`
-  border-radius: 5px;
-  background-color: MediumSlateBlue;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-`;
-
 const AddTodoForm = (props) => {
   const {
     register,
+
     handleSubmit,
     reset,
     formState: { isSubmitSuccessful },
-  } = useForm({ defaultValues: { something: "anything" } });
+  } = useForm();
 
-  const [submittedData] = React.useState({});
+  const [submittedData] = useState({});
 
   const onSubmit = (data) => {
     props.addTask(data.task, props.day, props.index, false);
@@ -37,16 +32,14 @@ const AddTodoForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        register={register}
-        required
+      <Textarea
+        register={register({ required: true })}
         type="text"
-        label="task"
+        name="task"
         placeholder="Добавь задачу"
-        autoFocus={true}
       />
       <ContainerButton>
-        <StyledButton>+</StyledButton>
+        <Button color=" MediumSlateBlue">+</Button>
       </ContainerButton>
     </form>
   );
