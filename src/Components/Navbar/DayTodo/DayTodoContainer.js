@@ -1,5 +1,5 @@
 import DayTodo from "./DayTodo";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 import {
   addTaskThunk,
@@ -7,37 +7,29 @@ import {
   checkedTodoThunk,
 } from "../../../redux/todoReduser";
 
-const DayTodoContainer = (props) => {
+const DayTodoContainer = ({ day }) => {
+  const dispatch = useDispatch();
+
+  const todos = useSelector((state) => state.todoList.todos);
+  const loadingDay = useSelector((state) => state.todoList.loadingDay);
+
+  const addTask = (task, day, index, done) =>
+    dispatch(addTaskThunk(task, day, index, done));
+  const deleteTask = (id, day) => dispatch(deleteTodoThunk(id, day));
+  const checked = (id, done) => dispatch(checkedTodoThunk(id, done));
+
   return (
     <>
       <DayTodo
-        todos={props.todos}
-        day={props.day}
-        addTask={props.addTask}
-        deleteTask={props.deleteTask}
-        loading={props.loading}
-        loadingDay={props.loadingDay}
-        checked={props.checked}
+        todos={todos}
+        day={day}
+        addTask={addTask}
+        deleteTask={deleteTask}
+        loadingDay={loadingDay}
+        checked={checked}
       />
     </>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    todos: state.todoList.todos,
-    loading: state.todoList.loadingButton,
-    loadingDay: state.todoList.loadingDay,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addTask: (task, day, index, done) =>
-      dispatch(addTaskThunk(task, day, index, done)),
-    deleteTask: (id, day) => dispatch(deleteTodoThunk(id, day)),
-    checked: (id, done) => dispatch(checkedTodoThunk(id, done)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DayTodoContainer);
+export default DayTodoContainer;

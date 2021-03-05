@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   moveTaskInOtherColumnThunk,
   setTodosThunk,
@@ -7,55 +7,52 @@ import {
 import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 
-const NavbarContainer = (props) => {
+const NavbarContainer = () => {
   useEffect(() => {
-    props.setTodos();
+    setTodos();
   }, []);
+
+  const dispatch = useDispatch();
+
+  const loading = useSelector((state) => state.todoList.loading);
+
+  const setTodos = () => dispatch(setTodosThunk());
+
+  const moveTaskInSameColumn = (
+    sourceIndex,
+    destinationIndex,
+    day,
+    draggableId
+  ) =>
+    dispatch(
+      moveTaskInSameColumnThunk(sourceIndex, destinationIndex, day, draggableId)
+    );
+  const moveTaskInOtherColumn = (
+    sourceIndex,
+    sourceId,
+    destinationIndex,
+    destinationId,
+    draggableId
+  ) =>
+    dispatch(
+      moveTaskInOtherColumnThunk(
+        sourceIndex,
+        sourceId,
+        destinationIndex,
+        destinationId,
+        draggableId
+      )
+    );
 
   return (
     <>
       <Navbar
-        moveTaskInSameColumn={props.moveTaskInSameColumn}
-        moveTaskInOtherColumn={props.moveTaskInOtherColumn}
-        loading={props.loading}
+        moveTaskInSameColumn={moveTaskInSameColumn}
+        moveTaskInOtherColumn={moveTaskInOtherColumn}
+        loading={loading}
       />
     </>
   );
 };
 
-const mapStateToProps = (state) => ({
-  loading: state.todoList.loading,
-});
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    moveTaskInSameColumn: (sourceIndex, destinationIndex, day, draggableId) =>
-      dispatch(
-        moveTaskInSameColumnThunk(
-          sourceIndex,
-          destinationIndex,
-          day,
-          draggableId
-        )
-      ),
-    moveTaskInOtherColumn: (
-      sourceIndex,
-      sourceId,
-      destinationIndex,
-      destinationId,
-      draggableId
-    ) =>
-      dispatch(
-        moveTaskInOtherColumnThunk(
-          sourceIndex,
-          sourceId,
-          destinationIndex,
-          destinationId,
-          draggableId
-        )
-      ),
-    setTodos: () => dispatch(setTodosThunk()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavbarContainer);
+export default NavbarContainer;
